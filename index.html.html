@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Charlton Auto Rentals</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box}
+:root{
+  --bg:#f5f7fb; --card:#fff; --text:#172033; --muted:#748096; --line:#e7ebf2;
+  --dark:#111827; --dark2:#1f2937; --slate:#273449;
+  --accent:#2563eb; --accent-deep:#1d4ed8; --accent-soft:#eef4ff;
+  --green:#16a34a; --orange:#ea580c; --red:#dc2626;
+}
+body{
+  margin:0; font-family:Archivo, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color:var(--text); background:var(--bg); min-height:100vh; display:flex; align-items:stretch;
+  font-size:14px; line-height:1.45;
+}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.rail{width:245px;flex:0 0 245px;background:var(--dark);color:#fff;padding:24px 16px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.brand{font-size:20px;font-weight:800;letter-spacing:1px;padding:0 12px 28px}
+.brand span{display:block;color:#93c5fd;font-size:11px;letter-spacing:1.5px;font-weight:700;margin-top:5px}
+.navgroup{font-size:10px;text-transform:uppercase;color:#68758a;margin:22px 13px 7px;letter-spacing:1.3px}
+.navitem{display:block;width:100%;text-align:left;border:0;background:none;color:#aeb8c8;
+  padding:12px 13px;border-radius:9px;margin:4px 0;font-size:14px;cursor:pointer}
+.navitem:hover,.navitem.on{background:var(--dark2);color:#fff}
+.railfoot{margin-top:auto;padding:14px 13px 0;font-size:11px;color:#68758a;border-top:1px solid #263041}
+
+.main{flex:1;min-width:0;padding:24px 28px 64px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.topbar h1{font-size:24px;font-weight:600;margin:0;letter-spacing:-.02em}
+.topbar p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+.strip{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(20,30,50,.03)}
+.strip>div{padding:16px 18px;border-right:1px solid var(--line)}
+.strip>div:last-child{border-right:0}
+.figlabel{font-size:12px;color:var(--muted)}
+.figure{font-size:27px;font-weight:800;letter-spacing:-.025em;font-variant-numeric:tabular-nums;margin:5px 0 3px}
+.fignote{font-size:12px;color:var(--muted)}
+.fignote.warn{color:var(--orange)}
+.fignote.bad{color:var(--red)}
+
+.two{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:16px;
+  box-shadow:0 2px 8px rgba(20,30,50,.03)}
+.panel.first{margin-top:0}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.panel h2{font-size:16px;font-weight:600;margin:0 0 12px}
+.panelhead h2{margin:0}
+.empty{color:var(--muted);font-size:13px;padding:14px 0;margin:0}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{font-size:12px;font-weight:500;color:var(--muted);text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .r{text-align:right}
+.num{font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:12px}
+.scroll{overflow-x:auto}
+.nowrap{white-space:nowrap}
+.good{color:var(--green)} .bad{color:var(--red)} .warntx{color:var(--orange)}
+
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 9px;border-radius:20px;white-space:nowrap}
+.chip.available{background:#dcfce7;color:#166534}
+.chip.rented,.chip.out{background:#dbeafe;color:#1d4ed8}
+.chip.maintenance{background:#ffedd5;color:#9a3412}
+.chip.overdue{background:#fee2e2;color:#b91c1c}
+.chip.booked{background:#eef2f7;color:#41506b}
+.chip.closed,.chip.cancelled{background:#f1f5f9;color:#64748b}
+
+.btn{font-size:13.5px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--slate);
+  padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#f3f6fa}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-deep)}
+.btn.sm{padding:6px 10px;font-size:12.5px;border-radius:7px}
+.btn.link{border:0;background:none;padding:4px 6px;color:var(--accent-deep)}
+.btn.link:hover{background:var(--accent-soft)}
+.btn.danger{color:var(--red);border-color:#fecaca}
+.btn.danger:hover{background:#fee2e2}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.search{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:0 11px;flex:1;min-width:190px}
+.search input{border:0;outline:0;padding:10px 0;font-family:inherit;font-size:14px;width:100%;background:none;color:var(--text)}
+.in{width:100%;font-family:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);
+  border-radius:8px;background:#fff;color:var(--text)}
+.in:focus{border-color:var(--accent)}
+select.in{cursor:pointer}
+.lbl{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.field{margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+.ov{position:fixed;inset:0;background:rgba(23,32,51,.5);display:flex;justify-content:center;
+  align-items:flex-start;padding:36px 14px;z-index:60;overflow-y:auto}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:580px;padding:20px 22px 22px;
+  box-shadow:0 18px 44px rgba(20,30,50,.18)}
+.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modalhead h3{margin:0;font-size:17px;font-weight:600}
+.iconbtn{border:0;background:none;cursor:pointer;color:var(--muted);padding:5px;border-radius:7px;line-height:0;font-size:18px}
+.iconbtn:hover{background:#f3f6fa;color:var(--text)}
+.modalfoot{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.calc{background:#f3f6fa;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:4px 0 12px;font-size:13px}
+.calc div{display:flex;justify-content:space-between;padding:3px 0}
+.calc div.tot{border-top:1px solid var(--line);margin-top:5px;padding-top:7px;font-weight:700}
+.warn{background:#ffedd5;color:#9a3412;border-radius:9px;padding:10px 12px;font-size:12.5px;margin-bottom:12px}
+.note{background:#dcfce7;color:#166534;border-radius:9px;padding:10px 12px;font-size:12.5px;margin-top:14px}
+
+.bars{display:flex;align-items:flex-end;gap:12px;height:180px;padding-top:8px}
+.barcol{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;height:100%;min-width:0}
+.barpair{display:flex;align-items:flex-end;gap:3px;height:100%}
+.bar{flex:1;border-radius:5px 5px 0 0;min-height:2px}
+.bar.rev{background:#3b82f6}
+.bar.exp{background:#fdba74}
+.barlab{text-align:center;font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px}
+
+.fleetstrip{display:flex;flex-wrap:wrap;gap:8px}
+.vcard{border:1px solid var(--line);border-radius:10px;padding:9px 11px;min-width:130px;background:#fff}
+.vcard b{font-size:13px;font-weight:600;display:block}
+.vcard .sub{font-size:11.5px}
+.due{margin-bottom:10px}
+.due div{margin-top:4px}
+
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.calhead{font-size:11px;color:var(--muted);text-align:center;padding-bottom:2px}
+.cell{border:1px solid var(--line);border-radius:8px;min-height:96px;padding:6px;background:#fff;overflow:hidden}
+.cell.dim{background:#f5f7fb}
+.cell.dim .daynum{color:#a9b4c6}
+.cell.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.strip>div.tile{cursor:pointer}
+.strip>div.tile:hover{background:#f8fafd}
+.strip>div.tile:hover .figure{color:var(--accent-deep)}
+.daynum{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.evt{font-size:10.5px;padding:2px 5px;border-radius:4px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evt.out{background:#dbeafe;color:#1d4ed8}
+.evt.booked{background:#eef2f7;color:#41506b}
+.evt.overdue{background:#fee2e2;color:#b91c1c}
+.evt.closed{background:#f1f5f9;color:#64748b}
+
+@media(max-width:920px){
+  body{flex-direction:column}
+  .rail{width:100%;flex:none;height:auto;position:static;flex-direction:row;align-items:center;
+    overflow-x:auto;padding:10px;gap:6px}
+  .brand{padding:0 14px 0 6px;flex:0 0 auto;font-size:16px}
+  .brand span{display:none}
+  .navgroup,.railfoot{display:none}
+  .navitem{width:auto;white-space:nowrap;padding:8px 11px}
+  .main{padding:16px 14px 48px}
+  .strip{grid-template-columns:1fr 1fr}
+  .two{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .cell{min-height:74px}
+  .evt{font-size:9.5px}
+}
+@media(max-width:520px){
+  .grid2{grid-template-columns:1fr}
+  .strip{grid-template-columns:1fr}
+}
+.gate{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;
+  padding:24px;z-index:80}
+.gatebox{background:#fff;border-radius:14px;padding:28px 26px;width:100%;max-width:360px;
+  box-shadow:0 18px 44px rgba(0,0,0,.35)}
+.gatebrand{font-size:20px;font-weight:800;letter-spacing:1px;color:var(--dark);margin-bottom:22px}
+.gatebrand span{display:block;color:#2563eb;font-size:11px;letter-spacing:1.5px;font-weight:700;margin-top:5px}
+.gatebox .field{margin-bottom:14px}
+.gatebox .btn{width:100%;justify-content:center;margin-top:4px}
+.gatemsg{font-size:12.5px;margin-top:14px;color:var(--red);min-height:18px}
+.gatemsg.working{color:var(--muted)}
+.gatefoot{font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.5}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#111827;color:#fff;
+  padding:11px 16px;border-radius:9px;font-size:13px;z-index:90;max-width:90%;
+  box-shadow:0 10px 26px rgba(0,0,0,.28)}
+.toast.bad{background:var(--red)}
+.railout{width:100%;margin-top:10px;border:0;background:none;color:#aeb8c8;font-size:11.5px;
+  text-align:left;padding:0;cursor:pointer}
+.railout:hover{color:#fff;text-decoration:underline}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<aside class="rail" id="rail" hidden>
+  <div class="brand">CHARLTON<span>AUTO RENTALS</span></div>
+  <div id="nav"></div>
+  <div class="railfoot">
+    <div id="saveflag">Ready</div>
+    <div style="margin-top:4px">All amounts in JMD</div>
+    <button class="railout" onclick="app.signOut()">Sign out</button>
+  </div>
+</aside>
+
+<main class="main" id="main" hidden></main>
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="gatebrand">CHARLTON<span>AUTO RENTALS</span></div>
+    <div class="field"><label class="lbl" for="authEmail">Email</label>
+      <input class="in" type="email" id="authEmail" autocomplete="username"></div>
+    <div class="field"><label class="lbl" for="authPassword">Password</label>
+      <input class="in" type="password" id="authPassword" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')app.signIn()"></div>
+    <button class="btn primary" id="authBtn" onclick="app.signIn()">Sign in</button>
+    <div class="gatemsg" id="authMsg"></div>
+    <div class="gatefoot">Accounts are created in the Supabase dashboard under Authentication, Users.
+      There is no sign up here on purpose.</div>
+  </div>
+</div>
+<div id="modalHost"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+"use strict";
+
+/* =============================================================
+   Charlton Auto Rentals
+   Single file rental, fleet, customer and money manager.
+   Records are stored in this browser under STORAGE_KEY.
+============================================================= */
+
+var STORAGE_KEY = "charlton-auto-rentals";
+var MS_DAY = 86400000;
+var MIN_RENTAL_DAYS = 1;      // bill the actual days, floor of one for a same day rental
+var LATE_FEE_PER_HOUR = 500;  // house rule: $500 per hour past the return time
+
+/* --------------------------- helpers ------------------------ */
+
+function parseDay(s){ var p = String(s).split("-").map(Number); return Date.UTC(p[0], p[1]-1, p[2]); }
+function dayDiff(a,b){ return Math.round((parseDay(b) - parseDay(a)) / MS_DAY); }
+function addDays(s,n){ return new Date(parseDay(s) + n*MS_DAY).toISOString().slice(0,10); }
+function fmtLocal(d){
+  return [d.getFullYear(), String(d.getMonth()+1).padStart(2,"0"), String(d.getDate()).padStart(2,"0")].join("-");
+}
+function todayISO(){ return fmtLocal(new Date()); }
+function money(n){
+  var v = Math.round(Number(n) || 0);
+  return (v < 0 ? "-" : "") + "$" + Math.abs(v).toLocaleString("en-US");
+}
+function prettyDate(s){
+  if(!s) return "";
+  return new Date(parseDay(s)).toLocaleDateString("en-US",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"});
+}
+function shortDate(s){
+  if(!s) return "";
+  return new Date(parseDay(s)).toLocaleDateString("en-US",{day:"numeric",month:"short",timeZone:"UTC"});
+}
+function uid(p){ return p + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+  });
+}
+function val(id){ var el = document.getElementById(id); return el ? el.value : ""; }
+function num(id){ return Number(val(id)) || 0; }
+
+/* rental maths */
+function rentalDays(r){ return Math.max(MIN_RENTAL_DAYS, dayDiff(r.pickup, r.returnDate)); }
+function rentalTotal(r){ return rentalDays(r) * (Number(r.rate)||0) + (Number(r.fees)||0); }
+function rentalPaid(r){
+  return state.payments.filter(function(p){ return p.rentalId === r.id; })
+    .reduce(function(s,p){ return s + (Number(p.amount)||0); }, 0);
+}
+function rentalBalance(r){ return rentalTotal(r) - rentalPaid(r); }
+function rentalState(r, today){
+  if(r.cancelled) return "cancelled";
+  if(r.returnedOn) return "closed";
+  if(dayDiff(today, r.pickup) > 0) return "booked";
+  if(dayDiff(r.returnDate, today) > 0) return "overdue";
+  return "out";
+}
+var STATE_LABEL = {booked:"Booked", out:"On rent", overdue:"Overdue", closed:"Returned", cancelled:"Cancelled"};
+function overdueDays(r, today){ return Math.max(0, dayDiff(r.returnDate, today)); }
+function lateFeeEstimate(r, today){ return overdueDays(r, today) * 24 * LATE_FEE_PER_HOUR; }
+function overlaps(a,b){ return dayDiff(a.pickup, b.returnDate) >= 0 && dayDiff(b.pickup, a.returnDate) >= 0; }
+function coversDay(r, day){ return dayDiff(r.pickup, day) >= 0 && dayDiff(day, r.returnDate) >= 0; }
+function vehicleState(v, today){
+  if(v.inMaintenance) return "maintenance";
+  var busy = state.rentals.some(function(r){
+    return r.vehicleId === v.id && ["out","overdue"].indexOf(rentalState(r, today)) > -1;
+  });
+  return busy ? "rented" : "available";
+}
+function chip(st, label){
+  return '<span class="chip ' + st + '">' + esc(label || STATE_LABEL[st] || st) + '</span>';
+}
+function customerName(id){
+  var c = state.customers.filter(function(x){ return x.id === id; })[0];
+  return c ? c.name : "Unknown";
+}
+function vehicleName(id){
+  var v = state.vehicles.filter(function(x){ return x.id === id; })[0];
+  return v ? v.make + " " + v.model : "Vehicle removed";
+}
+function vehicleFull(id){
+  var v = state.vehicles.filter(function(x){ return x.id === id; })[0];
+  return v ? v.make + " " + v.model + (v.color ? " " + v.color : "") + " (" + v.plate + ")" : "Vehicle removed";
+}
+function findRental(id){ return state.rentals.filter(function(r){ return r.id === id; })[0]; }
+function findVehicle(id){ return state.vehicles.filter(function(v){ return v.id === id; })[0]; }
+function findCustomer(id){ return state.customers.filter(function(c){ return c.id === id; })[0]; }
+
+/* --------------------------- database ----------------------- */
+
+var SUPABASE_URL = "https://jehrtgjxasykpenoslrk.supabase.co";
+var SUPABASE_KEY = "sb_publishable_3pm2-aaXKXK8kfC-U0-zvA_V07qtCCf";
+
+var sb = null;
+function client(){
+  if(!sb){
+    if(!window.supabase || !window.supabase.createClient){
+      throw new Error("The Supabase library did not load. Check your internet connection and refresh.");
+    }
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+  return sb;
+}
+
+var state = {vehicles:[], customers:[], rentals:[], payments:[], expenses:[]};
+var ui = {view:"dashboard", rentalQuery:"", rentalFilter:"open", customerQuery:"",
+          expenseCategory:"all", reportRange:6, calCursor:null, calVehicle:"all",
+          openCustomer:null, modal:null, message:"", email:""};
+
+/* Screens use plain names, the database uses its own. This is the translation. */
+function blankToNull(v){ return v === "" || v === undefined ? null : v; }
+function nullToBlank(v){ return v === null || v === undefined ? "" : v; }
+
+var MAP = {
+  vehicles: {
+    order: {col:"plate", asc:true},
+    toDb: function(v){ return {id:v.id, make:v.make, model:v.model||"", year:Number(v.year)||null,
+      plate:v.plate, rate:Number(v.rate)||0, color:v.color||"", mileage:Number(v.mileage)||0,
+      in_maintenance:!!v.inMaintenance, notes:v.notes||""}; },
+    fromDb: function(r){ return {id:r.id, make:r.make, model:r.model, year:r.year, plate:r.plate,
+      rate:Number(r.rate), color:nullToBlank(r.color), mileage:Number(r.mileage),
+      inMaintenance:!!r.in_maintenance, notes:nullToBlank(r.notes)}; }
+  },
+  customers: {
+    order: {col:"name", asc:true},
+    toDb: function(c){ return {id:c.id, name:c.name, phone:c.phone||"", email:c.email||"",
+      address:c.address||"", licence:c.licence||"", notes:c.notes||""}; },
+    fromDb: function(r){ return {id:r.id, name:r.name, phone:nullToBlank(r.phone), email:nullToBlank(r.email),
+      address:nullToBlank(r.address), licence:nullToBlank(r.licence), notes:nullToBlank(r.notes)}; }
+  },
+  rentals: {
+    order: {col:"pickup", asc:false},
+    toDb: function(r){ return {id:r.id, customer_id:blankToNull(r.customerId), vehicle_id:blankToNull(r.vehicleId),
+      pickup:r.pickup, return_date:r.returnDate, rate:Number(r.rate)||0, fees:Number(r.fees)||0,
+      agreement_no:r.agreementNo||"", notes:r.notes||"", returned_on:blankToNull(r.returnedOn),
+      cancelled:!!r.cancelled}; },
+    fromDb: function(d){ return {id:d.id, customerId:nullToBlank(d.customer_id), vehicleId:nullToBlank(d.vehicle_id),
+      pickup:d.pickup, returnDate:d.return_date, rate:Number(d.rate), fees:Number(d.fees),
+      agreementNo:nullToBlank(d.agreement_no), notes:nullToBlank(d.notes),
+      returnedOn:d.returned_on || null, cancelled:!!d.cancelled}; }
+  },
+  payments: {
+    order: {col:"paid_on", asc:false},
+    toDb: function(p){ return {id:p.id, rental_id:p.rentalId, paid_on:p.date, amount:Number(p.amount)||0,
+      method:p.method||"Cash", receipt_no:p.receiptNo||"", note:p.note||""}; },
+    fromDb: function(d){ return {id:d.id, rentalId:d.rental_id, date:d.paid_on, amount:Number(d.amount),
+      method:nullToBlank(d.method), receiptNo:nullToBlank(d.receipt_no), note:nullToBlank(d.note)}; }
+  },
+  expenses: {
+    order: {col:"spent_on", asc:false},
+    toDb: function(e){ return {id:e.id, vehicle_id:blankToNull(e.vehicleId), spent_on:e.date,
+      category:e.category||"Other", amount:Number(e.amount)||0, note:e.note||""}; },
+    fromDb: function(d){ return {id:d.id, vehicleId:nullToBlank(d.vehicle_id), date:d.spent_on,
+      category:d.category, amount:Number(d.amount), note:nullToBlank(d.note)}; }
+  }
+};
+var TABLES = ["vehicles","customers","rentals","payments","expenses"];
+
+function dbLoad(){
+  var c = client();
+  return Promise.all(TABLES.map(function(name){
+    return c.from(name).select("*").order(MAP[name].order.col, {ascending: MAP[name].order.asc});
+  })).then(function(results){
+    var next = {};
+    TABLES.forEach(function(name, i){
+      var res = results[i];
+      if(res.error) throw new Error("Could not read " + name + ": " + res.error.message);
+      next[name] = (res.data || []).map(MAP[name].fromDb);
+    });
+    state = next;
+  });
+}
+function dbSave(kind, obj){
+  return client().from(kind).upsert(MAP[kind].toDb(obj)).select().then(function(res){
+    if(res.error) throw new Error(res.error.message);
+    return res.data;
+  });
+}
+function dbSaveMany(kind, list){
+  if(!list.length) return Promise.resolve();
+  return client().from(kind).upsert(list.map(MAP[kind].toDb)).then(function(res){
+    if(res.error) throw new Error(res.error.message);
+  });
+}
+function dbRemove(kind, id){
+  return client().from(kind).delete().eq("id", id).then(function(res){
+    if(res.error) throw new Error(res.error.message);
+  });
+}
+
+/* Screens update at once, the database catches up. If it refuses, we say so and reload. */
+function push(work){
+  flag("Saving");
+  return Promise.resolve(work).then(function(){
+    flag("Saved");
+  }).catch(function(err){
+    flag("Not saved");
+    toast("Could not save: " + err.message, true);
+    return dbLoad().then(render).catch(function(){});
+  });
+}
+function toast(text, bad){
+  var old = document.getElementById("toast");
+  if(old) old.remove();
+  var el = document.createElement("div");
+  el.id = "toast";
+  el.className = "toast" + (bad ? " bad" : "");
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(function(){ if(el.parentNode) el.remove(); }, bad ? 7000 : 3000);
+}
+function flag(text){
+  var el = document.getElementById("saveflag");
+  if(el) el.textContent = text;
+}
+
+/* --------------------------- signing in --------------------- */
+
+function gateMsg(text, working){
+  var el = document.getElementById("authMsg");
+  if(el){ el.textContent = text; el.className = "gatemsg" + (working ? " working" : ""); }
+}
+function showGate(){
+  document.getElementById("gate").style.display = "flex";
+  document.getElementById("rail").hidden = true;
+  document.getElementById("main").hidden = true;
+}
+function startApp(email){
+  ui.email = email || "";
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("rail").hidden = false;
+  document.getElementById("main").hidden = false;
+  gateMsg("");
+  return dbLoad().then(function(){
+    render();
+    flag("Up to date");
+  }).catch(function(err){
+    render();
+    toast("Could not load your records: " + err.message, true);
+  });
+}
+function boot(){
+  var c;
+  try{ c = client(); }
+  catch(err){ showGate(); gateMsg(err.message); return Promise.resolve(); }
+  return c.auth.getSession().then(function(res){
+    var session = res && res.data ? res.data.session : null;
+    if(session){ return startApp(session.user ? session.user.email : ""); }
+    showGate();
+  }).catch(function(){ showGate(); });
+}
+/* --------------------------- navigation --------------------- */
+
+var GLYPHS = {
+  dashboard:"\u25A6", rentals:"\u25A3", customers:"\u2659", vehicles:"\u25A4",
+  payments:"$", expenses:"\u25C9", reports:"\u25A5",
+  maintenance:"\u2699", calendar:"\u25A1", settings:"\u2699"
+};
+function icon(name){ return GLYPHS[name] + " &nbsp; "; }
+var NAV = [
+  {group:null, items:[["dashboard","Dashboard"],["rentals","Rentals"],["customers","Customers"],["vehicles","Vehicles"]]},
+  {group:"Finance", items:[["payments","Payments"],["expenses","Expenses"],["reports","Reports"]]},
+  {group:"Fleet", items:[["maintenance","Maintenance"],["calendar","Calendar"]]},
+  {group:"System", items:[["settings","Settings"]]}
+];
+function renderNav(){
+  var html = "";
+  NAV.forEach(function(sec){
+    if(sec.group) html += '<div class="navgroup">' + sec.group + "</div>";
+    sec.items.forEach(function(it){
+      html += '<button class="navitem' + (ui.view === it[0] ? " on" : "") + '" onclick="app.go(\'' + it[0] + '\')">' +
+        icon(it[0]) + it[1] + "</button>";
+    });
+  });
+  document.getElementById("nav").innerHTML = html;
+}
+
+/* --------------------------- views -------------------------- */
+
+function render(){
+  renderNav();
+  var main = document.getElementById("main");
+  main.innerHTML = VIEWS[ui.view]();
+  main.scrollTop = 0;
+}
+
+var VIEWS = {};
+
+/* ---- dashboard ---- */
+VIEWS.dashboard = function(){
+  var t = todayISO();
+  var month = t.slice(0,7);
+  var revenue = state.payments.filter(function(p){ return p.date.slice(0,7) === month; })
+    .reduce(function(s,p){ return s + p.amount; }, 0);
+  var spend = state.expenses.filter(function(e){ return e.date.slice(0,7) === month; })
+    .reduce(function(s,e){ return s + e.amount; }, 0);
+
+  var live = state.rentals.filter(function(r){ return !r.cancelled; });
+  var outstanding = live.reduce(function(s,r){ return s + Math.max(0, rentalBalance(r)); }, 0);
+  var owing = live.filter(function(r){ return rentalBalance(r) > 0; }).length;
+
+  var states = state.vehicles.map(function(v){ return vehicleState(v, t); });
+  var rented = states.filter(function(s){ return s === "rented"; }).length;
+  var free = states.filter(function(s){ return s === "available"; }).length;
+  var util = state.vehicles.length ? Math.round(rented / state.vehicles.length * 100) : 0;
+
+  var overdue = live.filter(function(r){ return rentalState(r,t) === "overdue"; });
+  var dueToday = live.filter(function(r){ return rentalState(r,t) === "out" && r.returnDate === t; });
+  var soon = live.filter(function(r){ return rentalState(r,t) === "booked" && dayDiff(t, r.pickup) <= 7; })
+    .sort(function(a,b){ return a.pickup.localeCompare(b.pickup); });
+
+  var months = monthKeys(6);
+  var series = months.map(function(m){
+    return {
+      label:m.label,
+      rev: state.payments.filter(function(p){ return p.date.slice(0,7) === m.key; }).reduce(function(s,p){ return s+p.amount; },0),
+      exp: state.expenses.filter(function(e){ return e.date.slice(0,7) === m.key; }).reduce(function(s,e){ return s+e.amount; },0)
+    };
+  });
+  var peak = Math.max.apply(null, [1].concat(series.map(function(s){ return Math.max(s.rev, s.exp); })));
+
+  var hour = new Date().getHours();
+  var greeting = hour < 12 ? "Good morning" : (hour < 17 ? "Good afternoon" : "Good evening");
+
+  var html = '<div class="topbar"><div><h1>' + greeting + ', Charlton</h1><p>' +
+    new Date().toLocaleDateString("en-US",{weekday:"long",day:"numeric",month:"long",year:"numeric"}) +
+    '</p></div><button class="btn primary" onclick="app.newRental()">+ New rental</button></div>';
+
+  html += '<section class="strip">' +
+    fig("Money in this month", money(revenue), money(spend) + " spent so far", "",
+        "app.go(&quot;payments&quot;)") +
+    fig("Owed to you", money(outstanding),
+        owing ? owing + (owing === 1 ? " rental unpaid" : " rentals unpaid") : "Everything settled",
+        owing ? "warn" : "", "app.openRentals(&quot;unpaid&quot;)") +
+    fig("Cars out", rented + " of " + state.vehicles.length, "Fleet in use: " + util + "%", "",
+        "app.openRentals(&quot;out&quot;)") +
+    fig("Ready to rent", String(free),
+        overdue.length ? overdue.length + " overdue return" + (overdue.length === 1 ? "" : "s") : "No overdue returns",
+        overdue.length ? "bad" : "",
+        overdue.length ? "app.openRentals(&quot;overdue&quot;)" : "app.go(&quot;vehicles&quot;)") +
+    "</section>";
+
+  html += '<div class="two"><div class="panel first"><div class="panelhead"><h2>Money in and money out</h2>' +
+    '<button class="btn link sm" onclick="app.go(\'reports\')">Full report</button></div><div class="bars">';
+  series.forEach(function(s){
+    html += '<div class="barcol"><div class="barpair">' +
+      '<div class="bar rev" style="height:' + Math.max(2, s.rev/peak*100) + '%" title="Income ' + money(s.rev) + '"></div>' +
+      '<div class="bar exp" style="height:' + Math.max(2, s.exp/peak*100) + '%" title="Expenses ' + money(s.exp) + '"></div>' +
+      '</div><div class="barlab">' + s.label + "</div></div>";
+  });
+  html += '</div><div class="legend"><span><i class="dot" style="background:#3b82f6"></i>Income received</span>' +
+    '<span><i class="dot" style="background:#fdba74"></i>Expenses paid</span></div></div>';
+
+  html += '<div class="panel first"><h2>Today and the week ahead</h2>';
+  overdue.forEach(function(r){
+    html += '<div class="due">' + chip("overdue","Overdue " + overdueDays(r,t) + "d") +
+      "<div>" + esc(vehicleName(r.vehicleId)) + " with " + esc(customerName(r.customerId)) + "</div>" +
+      '<div class="sub">Late fee running at ' + money(lateFeeEstimate(r,t)) + "</div></div>";
+  });
+  dueToday.forEach(function(r){
+    html += '<div class="due">' + chip("out","Back today") +
+      "<div>" + esc(vehicleName(r.vehicleId)) + " with " + esc(customerName(r.customerId)) + "</div>" +
+      '<div class="sub">Balance ' + money(Math.max(0, rentalBalance(r))) + "</div></div>";
+  });
+  soon.slice(0,4).forEach(function(r){
+    html += '<div class="due">' + chip("booked","Out " + shortDate(r.pickup)) +
+      "<div>" + esc(vehicleName(r.vehicleId)) + " for " + esc(customerName(r.customerId)) + "</div></div>";
+  });
+  if(!overdue.length && !dueToday.length && !soon.length){
+    html += '<p class="empty">Nothing due in the next seven days.</p>';
+  }
+  html += "</div></div>";
+
+  html += '<section class="panel"><div class="panelhead"><h2>Fleet right now</h2>' +
+    '<button class="btn link sm" onclick="app.go(\'vehicles\')">Manage vehicles</button></div><div class="fleetstrip">';
+  state.vehicles.forEach(function(v){
+    var st = vehicleState(v, t);
+    var active = state.rentals.filter(function(r){
+      return r.vehicleId === v.id && ["out","overdue"].indexOf(rentalState(r,t)) > -1;
+    })[0];
+    html += '<div class="vcard"><b>' + esc(v.make + " " + v.model) + '</b><div class="sub">' + esc(v.plate) + "</div>" +
+      '<div style="margin-top:6px">' + chip(st, st === "rented" ? "On rent" : (st === "available" ? "Available" : "Maintenance")) + "</div>" +
+      (active ? '<div class="sub" style="margin-top:5px">Back ' + shortDate(active.returnDate) + "</div>" : "") +
+      "</div>";
+  });
+  html += "</div></section>";
+  return html;
+};
+
+function fig(label, value, note, tone, go){
+  var attrs = go ? ' class="tile" tabindex="0" role="button" onclick="' + go +
+    '" onkeydown="if(event.key===\'Enter\')' + go + '"' : "";
+  return "<div" + attrs + "><div class=\"figlabel\">" + label + "</div><div class=\"figure\">" + value +
+    "</div><div class=\"fignote " + (tone||"") + "\">" + note + "</div></div>";
+}
+function monthKeys(n){
+  var out = [], base = new Date();
+  for(var i = n-1; i >= 0; i--){
+    var d = new Date(base.getFullYear(), base.getMonth()-i, 1);
+    out.push({
+      key: d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0"),
+      label: d.toLocaleString("en-US",{month:"short"}),
+      long: d.toLocaleString("en-US",{month:"short",year:"2-digit"})
+    });
+  }
+  return out;
+}
+
+/* ---- rentals ---- */
+VIEWS.rentals = function(){
+  var t = todayISO();
+  var term = ui.rentalQuery.trim().toLowerCase();
+  var rows = state.rentals.map(function(r){ return {r:r, st:rentalState(r,t)}; })
+    .filter(function(x){
+      if(ui.rentalFilter === "all") return true;
+      if(ui.rentalFilter === "open") return ["out","overdue","booked"].indexOf(x.st) > -1;
+      if(ui.rentalFilter === "unpaid") return x.st !== "cancelled" && rentalBalance(x.r) > 0;
+      return ui.rentalFilter === x.st;
+    })
+    .filter(function(x){
+      if(!term) return true;
+      return (customerName(x.r.customerId) + " " + vehicleFull(x.r.vehicleId) + " " +
+              (x.r.agreementNo || "")).toLowerCase().indexOf(term) > -1;
+    })
+    .sort(function(a,b){ return b.r.pickup.localeCompare(a.r.pickup); });
+
+  var blurb = ui.rentalFilter === "unpaid" ? "Rentals with money still owing."
+    : ui.rentalFilter === "overdue" ? "Cars that are past their return date."
+    : ui.rentalFilter === "out" ? "Cars that are with a customer right now."
+    : "Every booking, past and upcoming.";
+  var html = '<div class="topbar"><div><h1>Rentals</h1><p>' + blurb + '</p></div>' +
+    '<button class="btn primary" onclick="app.newRental()">+ New rental</button></div>';
+
+  html += '<div class="toolbar"><div class="search">' + searchIcon() +
+    '<input id="rentalSearch" value="' + esc(ui.rentalQuery) + '" placeholder="Search by customer or vehicle" oninput="app.setRentalQuery(this.value)"></div>' +
+    '<select class="in" style="width:170px" onchange="app.setRentalFilter(this.value)">' +
+    opts([["open","Open rentals"],["unpaid","Unpaid"],["out","On rent"],["overdue","Overdue"],
+          ["booked","Booked"],["closed","Returned"],["cancelled","Cancelled"],["all","All"]], ui.rentalFilter) +
+    "</select></div>";
+
+  html += '<div class="panel first">';
+  if(!rows.length){
+    html += '<p class="empty">No rentals match this view. Create one with the button above.</p>';
+  } else {
+    html += '<div class="scroll"><table class="tbl"><thead><tr><th>Customer</th><th>Vehicle</th><th>Dates</th>' +
+      '<th class="r">Days</th><th class="r">Total</th><th class="r">Balance</th><th>Status</th><th></th></tr></thead><tbody>';
+    rows.forEach(function(x){
+      var r = x.r, bal = rentalBalance(r);
+      html += "<tr><td><b>" + esc(customerName(r.customerId)) + "</b>" +
+        (r.agreementNo ? '<div class="sub">Agreement ' + esc(r.agreementNo) + "</div>" : "") +
+        (r.notes ? '<div class="sub">' + esc(r.notes) + "</div>" : "") + "</td>" +
+        "<td>" + esc(vehicleFull(r.vehicleId)) + "</td>" +
+        "<td>" + shortDate(r.pickup) + " to " + shortDate(r.returnDate) +
+        (x.st === "overdue" ? '<div class="sub bad">Late fee ' + money(lateFeeEstimate(r,t)) + "</div>" : "") +
+        (r.returnedOn ? '<div class="sub">Returned ' + shortDate(r.returnedOn) + "</div>" : "") + "</td>" +
+        '<td class="r num">' + rentalDays(r) + "</td>" +
+        '<td class="r num">' + money(rentalTotal(r)) + "</td>" +
+        '<td class="r num ' + (bal > 0 ? "bad" : "good") + '">' + money(bal) + "</td>" +
+        "<td>" + chip(x.st) + "</td>" +
+        '<td class="r nowrap">' +
+        (bal > 0 && !r.cancelled ? '<button class="btn link sm" onclick="app.takePayment(\'' + r.id + '\')">Take payment</button>' : "") +
+        (x.st === "overdue" ? '<button class="btn link sm" onclick="app.addLateFee(\'' + r.id + '\')">Add late fee</button>' : "") +
+        (["out","overdue"].indexOf(x.st) > -1 ? '<button class="btn link sm" onclick="app.markReturned(\'' + r.id + '\')">Mark returned</button>' : "") +
+        '<button class="btn link sm" onclick="app.editRental(\'' + r.id + '\')">Edit</button>' +
+        (!r.cancelled && !r.returnedOn ? '<button class="btn link sm" onclick="app.cancelRental(\'' + r.id + '\')">Cancel</button>' : "") +
+        '<button class="btn link sm" title="Delete" onclick="app.deleteRental(\'' + r.id + '\')">Delete</button>' +
+        "</td></tr>";
+    });
+    html += "</tbody></table></div>";
+  }
+  return html + "</div>";
+};
+
+function searchIcon(){
+  return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#748096" stroke-width="1.8" ' +
+    'stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>';
+}
+function opts(list, selected){
+  return list.map(function(o){
+    var v = Array.isArray(o) ? o[0] : o, label = Array.isArray(o) ? o[1] : o;
+    return '<option value="' + esc(v) + '"' + (String(v) === String(selected) ? " selected" : "") + ">" + esc(label) + "</option>";
+  }).join("");
+}
+
+/* ---- customers ---- */
+VIEWS.customers = function(){
+  var t = todayISO();
+  var term = ui.customerQuery.trim().toLowerCase();
+  var list = state.customers.filter(function(c){
+    if(!term) return true;
+    return (c.name + " " + c.phone + " " + c.email).toLowerCase().indexOf(term) > -1;
+  });
+
+  var html = '<div class="topbar"><div><h1>Customers</h1><p>Contact details, licence reference and rental history.</p></div>' +
+    '<button class="btn primary" onclick="app.newCustomer()">+ Add customer</button></div>';
+  html += '<div class="toolbar"><div class="search">' + searchIcon() +
+    '<input value="' + esc(ui.customerQuery) + '" placeholder="Search name, phone or email" oninput="app.setCustomerQuery(this.value)"></div></div>';
+
+  html += '<div class="panel first">';
+  if(!list.length){
+    html += '<p class="empty">No customers found. Add your first one above.</p></div>';
+    return html;
+  }
+  html += '<div class="scroll"><table class="tbl"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Licence</th>' +
+    '<th class="r">Rentals</th><th class="r">Owing</th><th></th></tr></thead><tbody>';
+  list.forEach(function(c){
+    var mine = state.rentals.filter(function(r){ return r.customerId === c.id; })
+      .sort(function(a,b){ return b.pickup.localeCompare(a.pickup); });
+    var owes = mine.filter(function(r){ return !r.cancelled; })
+      .reduce(function(s,r){ return s + Math.max(0, rentalBalance(r)); }, 0);
+    html += "<tr><td><b>" + esc(c.name) + "</b>" + (c.address ? '<div class="sub">' + esc(c.address) + "</div>" : "") + "</td>" +
+      '<td class="num">' + esc(c.phone) + '</td><td class="sub">' + esc(c.email) + '</td><td class="num">' + esc(c.licence) + "</td>" +
+      '<td class="r num">' + mine.length + "</td>" +
+      '<td class="r num ' + (owes > 0 ? "bad" : "") + '">' + money(owes) + "</td>" +
+      '<td class="r nowrap">' +
+      '<button class="btn link sm" onclick="app.toggleCustomer(\'' + c.id + '\')">' +
+      (ui.openCustomer === c.id ? "Hide history" : "History") + "</button>" +
+      '<button class="btn link sm" onclick="app.editCustomer(\'' + c.id + '\')">Edit</button>' +
+      '<button class="btn link sm" onclick="app.deleteCustomer(\'' + c.id + '\')">Delete</button></td></tr>';
+    if(ui.openCustomer === c.id){
+      html += '<tr><td colspan="7" style="background:#f5f7fb">';
+      if(!mine.length){
+        html += '<span class="sub">No rentals yet.</span>';
+      } else {
+        html += '<table class="tbl"><tbody>';
+        mine.forEach(function(r){
+          html += "<tr><td>" + esc(vehicleName(r.vehicleId)) + "</td><td>" +
+            shortDate(r.pickup) + " to " + shortDate(r.returnDate) + "</td>" +
+            '<td class="num">' + money(rentalTotal(r)) + "</td>" +
+            '<td class="num">Balance ' + money(rentalBalance(r)) + "</td>" +
+            "<td>" + chip(rentalState(r, t)) + "</td></tr>";
+        });
+        html += "</tbody></table>";
+      }
+      if(c.notes) html += '<div class="sub" style="padding:6px 8px">Note: ' + esc(c.notes) + "</div>";
+      html += "</td></tr>";
+    }
+  });
+  return html + "</tbody></table></div></div>";
+};
+
+/* ---- vehicles ---- */
+VIEWS.vehicles = function(){
+  var t = todayISO();
+  var html = '<div class="topbar"><div><h1>Vehicles</h1><p>Your fleet, daily rates and current status.</p></div>' +
+    '<button class="btn primary" onclick="app.newVehicle()">+ Add vehicle</button></div><div class="panel first">';
+  if(!state.vehicles.length) return html + '<p class="empty">No vehicles yet. Add the first car in your fleet.</p></div>';
+
+  html += '<div class="scroll"><table class="tbl"><thead><tr><th>Vehicle</th><th>Plate</th><th class="r">Rate per day</th>' +
+    '<th class="r">Mileage</th><th>Status</th><th>With</th><th class="r">Earned</th><th class="r">Spent</th><th></th></tr></thead><tbody>';
+  state.vehicles.forEach(function(v){
+    var st = vehicleState(v, t);
+    var active = state.rentals.filter(function(r){
+      return r.vehicleId === v.id && ["out","overdue"].indexOf(rentalState(r,t)) > -1;
+    })[0];
+    var ids = state.rentals.filter(function(r){ return r.vehicleId === v.id; }).map(function(r){ return r.id; });
+    var earned = state.payments.filter(function(p){ return ids.indexOf(p.rentalId) > -1; })
+      .reduce(function(s,p){ return s + p.amount; }, 0);
+    var spent = state.expenses.filter(function(e){ return e.vehicleId === v.id; })
+      .reduce(function(s,e){ return s + e.amount; }, 0);
+    html += "<tr><td><b>" + esc(v.make + " " + v.model) + '</b><div class="sub">' + v.year +
+      (v.color ? ", " + esc(v.color) : "") + (v.notes ? ", " + esc(v.notes) : "") + "</div></td>" +
+      '<td class="num">' + esc(v.plate) + '</td><td class="r num">' + money(v.rate) + "</td>" +
+      '<td class="r num">' + Number(v.mileage||0).toLocaleString("en-US") + " km</td>" +
+      "<td>" + chip(st, st === "rented" ? "On rent" : (st === "available" ? "Available" : "Maintenance")) + "</td>" +
+      "<td>" + (active ? esc(customerName(active.customerId)) + '<div class="sub">Back ' + shortDate(active.returnDate) + "</div>" : "") + "</td>" +
+      '<td class="r num">' + money(earned) + '</td><td class="r num">' + money(spent) + "</td>" +
+      '<td class="r nowrap"><button class="btn link sm" onclick="app.toggleService(\'' + v.id + '\')">' +
+      (v.inMaintenance ? "Back in service" : "Send to service") + "</button>" +
+      '<button class="btn link sm" onclick="app.editVehicle(\'' + v.id + '\')">Edit</button>' +
+      '<button class="btn link sm" onclick="app.deleteVehicle(\'' + v.id + '\')">Delete</button></td></tr>';
+  });
+  return html + "</tbody></table></div></div>";
+};
+
+/* ---- payments ---- */
+VIEWS.payments = function(){
+  var total = state.payments.reduce(function(s,p){ return s + p.amount; }, 0);
+  var sorted = state.payments.slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
+  var html = '<div class="topbar"><div><h1>Payments</h1><p>Every deposit and balance you have collected. Total received: ' +
+    money(total) + '.</p></div><button class="btn primary" onclick="app.takePayment()">+ Record payment</button></div><div class="panel first">';
+  if(!sorted.length) return html + '<p class="empty">No payments recorded yet.</p></div>';
+
+  html += '<div class="scroll"><table class="tbl"><thead><tr><th>Date</th><th>Customer</th><th>Vehicle</th>' +
+    '<th>Method</th><th>Receipt</th><th>Note</th><th class="r">Amount</th><th></th></tr></thead><tbody>';
+  sorted.forEach(function(p){
+    var r = findRental(p.rentalId);
+    html += '<tr><td class="num">' + prettyDate(p.date) + "</td>" +
+      "<td>" + (r ? esc(customerName(r.customerId)) : "Deleted rental") + "</td>" +
+      "<td>" + (r ? esc(vehicleName(r.vehicleId)) : "") + "</td>" +
+      "<td>" + esc(p.method) + '</td><td class="num">' + esc(p.receiptNo || "") +
+      '</td><td class="sub">' + esc(p.note) + "</td>" +
+      '<td class="r num"><b>' + money(p.amount) + "</b></td>" +
+      '<td class="r"><button class="btn link sm" onclick="app.deletePayment(\'' + p.id + '\')">Delete</button></td></tr>';
+  });
+  return html + "</tbody></table></div></div>";
+};
+
+/* ---- expenses ---- */
+var EXPENSE_CATEGORIES = ["Maintenance","Insurance","Registration","Repairs","Cleaning","Fuel","Other"];
+VIEWS.expenses = function(){
+  var list = state.expenses.filter(function(e){ return ui.expenseCategory === "all" || e.category === ui.expenseCategory; })
+    .sort(function(a,b){ return b.date.localeCompare(a.date); });
+  var total = list.reduce(function(s,e){ return s + e.amount; }, 0);
+
+  var html = '<div class="topbar"><div><h1>Expenses</h1><p>What the fleet costs you. Showing ' + money(total) +
+    ' in this view.</p></div><button class="btn primary" onclick="app.newExpense()">+ Add expense</button></div>';
+  html += '<div class="toolbar"><select class="in" style="width:200px" onchange="app.setExpenseCategory(this.value)">' +
+    opts([["all","All categories"]].concat(EXPENSE_CATEGORIES.map(function(c){ return [c,c]; })), ui.expenseCategory) +
+    "</select></div><div class=\"panel first\">";
+  if(!list.length) return html + '<p class="empty">Nothing recorded here yet.</p></div>';
+
+  html += '<div class="scroll"><table class="tbl"><thead><tr><th>Date</th><th>Category</th><th>Vehicle</th>' +
+    '<th>Details</th><th class="r">Amount</th><th></th></tr></thead><tbody>';
+  list.forEach(function(e){
+    html += '<tr><td class="num">' + prettyDate(e.date) + "</td><td>" + esc(e.category) + "</td>" +
+      "<td>" + (e.vehicleId ? esc(vehicleName(e.vehicleId)) : "Whole business") + "</td>" +
+      '<td class="sub">' + esc(e.note) + '</td><td class="r num"><b>' + money(e.amount) + "</b></td>" +
+      '<td class="r nowrap"><button class="btn link sm" onclick="app.editExpense(\'' + e.id + '\')">Edit</button>' +
+      '<button class="btn link sm" onclick="app.deleteExpense(\'' + e.id + '\')">Delete</button></td></tr>';
+  });
+  return html + "</tbody></table></div></div>";
+};
+
+/* ---- maintenance ---- */
+VIEWS.maintenance = function(){
+  var t = todayISO();
+  var logs = state.expenses.filter(function(e){ return ["Maintenance","Repairs"].indexOf(e.category) > -1; })
+    .sort(function(a,b){ return b.date.localeCompare(a.date); });
+  var inShop = state.vehicles.filter(function(v){ return v.inMaintenance; });
+
+  var html = '<div class="topbar"><div><h1>Maintenance</h1><p>What is off the road and what each car has had done.</p></div>' +
+    '<button class="btn primary" onclick="app.newExpense(\'Maintenance\')">+ Log service</button></div>';
+
+  html += '<div class="panel first"><h2>Off the road</h2>';
+  if(!inShop.length){
+    html += '<p class="empty">Every vehicle is in service.</p>';
+  } else {
+    html += '<div class="fleetstrip">';
+    inShop.forEach(function(v){
+      html += '<div class="vcard" style="min-width:190px"><b>' + esc(v.make + " " + v.model) + '</b>' +
+        '<div class="sub">' + esc(v.plate) + "</div>" +
+        (v.notes ? '<div class="sub" style="margin-top:4px">' + esc(v.notes) + "</div>" : "") +
+        '<button class="btn sm" style="margin-top:8px" onclick="app.toggleService(\'' + v.id + '\')">Back in service</button></div>';
+    });
+    html += "</div>";
+  }
+  html += "</div>";
+
+  html += '<div class="panel"><h2>Service record by vehicle</h2><div class="scroll"><table class="tbl"><thead><tr>' +
+    '<th>Vehicle</th><th class="r">Mileage</th><th>Last service</th><th class="r">Spent on service</th><th>Status</th></tr></thead><tbody>';
+  state.vehicles.forEach(function(v){
+    var mine = logs.filter(function(e){ return e.vehicleId === v.id; });
+    var spent = mine.reduce(function(s,e){ return s + e.amount; }, 0);
+    var last = mine.length ? mine[0].date : null;
+    var stale = last ? dayDiff(last, t) > 90 : true;
+    var st = vehicleState(v, t);
+    html += "<tr><td><b>" + esc(v.make + " " + v.model) + '</b><div class="sub">' + esc(v.plate) + "</div></td>" +
+      '<td class="r num">' + Number(v.mileage||0).toLocaleString("en-US") + " km</td>" +
+      "<td>" + (last ? prettyDate(last) : "No record") +
+      (stale ? '<div class="sub warntx">Due for a check</div>' : "") + "</td>" +
+      '<td class="r num">' + money(spent) + "</td>" +
+      "<td>" + chip(st, v.inMaintenance ? "In the shop" : (st === "rented" ? "On rent" : "Available")) + "</td></tr>";
+  });
+  html += "</tbody></table></div></div>";
+
+  html += '<div class="panel"><h2>Service and repair log</h2>';
+  if(!logs.length){
+    html += '<p class="empty">No service work logged yet.</p></div>';
+    return html;
+  }
+  html += '<div class="scroll"><table class="tbl"><thead><tr><th>Date</th><th>Vehicle</th><th>Work</th><th>Type</th>' +
+    '<th class="r">Cost</th></tr></thead><tbody>';
+  logs.forEach(function(e){
+    html += '<tr><td class="num">' + prettyDate(e.date) + "</td>" +
+      "<td>" + (e.vehicleId ? esc(vehicleName(e.vehicleId)) : "Whole business") + "</td>" +
+      "<td>" + esc(e.note) + "</td><td>" + esc(e.category) + '</td><td class="r num">' + money(e.amount) + "</td></tr>";
+  });
+  return html + "</tbody></table></div></div>";
+};
+
+/* ---- calendar ---- */
+VIEWS.calendar = function(){
+  var t = todayISO();
+  if(!ui.calCursor){
+    var now = new Date();
+    ui.calCursor = {y:now.getFullYear(), m:now.getMonth()};
+  }
+  var first = new Date(ui.calCursor.y, ui.calCursor.m, 1);
+  var pad = first.getDay();
+  var daysInMonth = new Date(ui.calCursor.y, ui.calCursor.m + 1, 0).getDate();
+  var cellCount = Math.ceil((pad + daysInMonth) / 7) * 7;
+  var shown = state.rentals.filter(function(r){
+    return !r.cancelled && (ui.calVehicle === "all" || r.vehicleId === ui.calVehicle);
+  });
+
+  var html = '<div class="topbar"><div><h1>Calendar</h1><p>Who has what, and which days are still free.</p></div>' +
+    '<div style="display:flex;gap:8px;align-items:center">' +
+    '<button class="btn sm" onclick="app.calStep(-1)">Previous</button>' +
+    '<b style="min-width:150px;text-align:center">' + first.toLocaleDateString("en-US",{month:"long",year:"numeric"}) + "</b>" +
+    '<button class="btn sm" onclick="app.calStep(1)">Next</button>' +
+    '<button class="btn sm" onclick="app.calToday()">Today</button></div></div>';
+
+  html += '<div class="toolbar"><select class="in" style="width:230px" onchange="app.setCalVehicle(this.value)">' +
+    opts([["all","All vehicles"]].concat(state.vehicles.map(function(v){
+      return [v.id, v.make + " " + v.model + " (" + v.plate + ")"];
+    })), ui.calVehicle) + "</select></div>";
+
+  html += '<div class="panel first"><div class="cal" style="margin-bottom:6px">';
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(function(d){
+    html += '<div class="calhead">' + d + "</div>";
+  });
+  html += '</div><div class="cal">';
+  for(var i = 0; i < cellCount; i++){
+    var d = new Date(ui.calCursor.y, ui.calCursor.m, i - pad + 1);
+    var iso = fmtLocal(d);
+    var inMonth = d.getMonth() === ui.calCursor.m;
+    var onDay = shown.filter(function(r){ return coversDay(r, iso); });
+    html += '<div class="cell' + (inMonth ? "" : " dim") + (iso === t ? " today" : "") + '">' +
+      '<div class="daynum">' + d.getDate() + "</div>";
+    onDay.slice(0,3).forEach(function(r){
+      html += '<div class="evt ' + rentalState(r,t) + '" title="' +
+        esc(vehicleName(r.vehicleId) + " with " + customerName(r.customerId)) + '">' +
+        esc(vehicleName(r.vehicleId)) + "</div>";
+    });
+    if(onDay.length > 3) html += '<div class="sub" style="font-size:10px">' + (onDay.length - 3) + " more</div>";
+    html += "</div>";
+  }
+  html += '</div><div class="legend">' +
+    '<span><i class="dot" style="background:#dbeafe"></i>On rent</span>' +
+    '<span><i class="dot" style="background:#eef2f7"></i>Booked</span>' +
+    '<span><i class="dot" style="background:#fee2e2"></i>Overdue</span>' +
+    '<span><i class="dot" style="background:#f1f5f9"></i>Returned</span></div></div>';
+  return html;
+};
+
+/* ---- reports ---- */
+VIEWS.reports = function(){
+  var t = todayISO();
+  var months = monthKeys(ui.reportRange);
+  var rows = months.map(function(m){
+    var rev = state.payments.filter(function(p){ return p.date.slice(0,7) === m.key; }).reduce(function(s,p){ return s+p.amount; },0);
+    var exp = state.expenses.filter(function(e){ return e.date.slice(0,7) === m.key; }).reduce(function(s,e){ return s+e.amount; },0);
+    var count = state.rentals.filter(function(r){ return !r.cancelled && r.pickup.slice(0,7) === m.key; }).length;
+    return {label:m.long, rev:rev, exp:exp, net:rev-exp, count:count};
+  });
+  var totRev = rows.reduce(function(s,r){ return s+r.rev; },0);
+  var totExp = rows.reduce(function(s,r){ return s+r.exp; },0);
+  var totCount = rows.reduce(function(s,r){ return s+r.count; },0);
+
+  var rangeText = ui.reportRange === 1 ? "this month"
+    : ui.reportRange === 2 ? "over the last two months"
+    : "over the last " + ui.reportRange + " months";
+  var html = '<div class="topbar"><div><h1>Reports</h1><p>How the business is doing ' + rangeText +
+    '.</p></div><select class="in" style="width:160px" onchange="app.setReportRange(this.value)">' +
+    opts([[1,"This month"],[2,"Last 2 months"],[3,"Last 3 months"],[6,"Last 6 months"],
+          [12,"Last 12 months"]], ui.reportRange) + "</select></div>";
+
+  html += '<section class="strip">' +
+    fig("Money in", money(totRev), "", "") +
+    fig("Money out", money(totExp), "", "") +
+    "<div><div class=\"figlabel\">Net profit</div><div class=\"figure " + (totRev-totExp >= 0 ? "good" : "bad") + "\">" +
+      money(totRev-totExp) + "</div><div class=\"fignote\"></div></div>" +
+    fig("Rentals started", String(totCount), "", "") + "</section>";
+
+  html += '<div class="panel"><h2>Month by month</h2><div class="scroll"><table class="tbl"><thead><tr><th>Month</th>' +
+    '<th class="r">Rentals</th><th class="r">Money in</th><th class="r">Money out</th><th class="r">Net</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    html += "<tr><td>" + r.label + '</td><td class="r num">' + r.count + '</td><td class="r num">' + money(r.rev) +
+      '</td><td class="r num">' + money(r.exp) + '</td><td class="r num ' + (r.net >= 0 ? "good" : "bad") +
+      '"><b>' + money(r.net) + "</b></td></tr>";
+  });
+  html += "</tbody></table></div></div>";
+
+  var byVehicle = state.vehicles.map(function(v){
+    var mine = state.rentals.filter(function(r){ return r.vehicleId === v.id && !r.cancelled; });
+    var ids = mine.map(function(r){ return r.id; });
+    var rev = state.payments.filter(function(p){ return ids.indexOf(p.rentalId) > -1; }).reduce(function(s,p){ return s+p.amount; },0);
+    var exp = state.expenses.filter(function(e){ return e.vehicleId === v.id; }).reduce(function(s,e){ return s+e.amount; },0);
+    var days = mine.reduce(function(s,r){ return s + rentalDays(r); }, 0);
+    return {v:v, rev:rev, exp:exp, net:rev-exp, count:mine.length, days:days};
+  }).sort(function(a,b){ return b.net - a.net; });
+
+  html += '<div class="panel"><h2>Which cars earn their keep</h2><div class="scroll"><table class="tbl"><thead><tr>' +
+    '<th>Vehicle</th><th class="r">Rentals</th><th class="r">Days rented</th><th class="r">Money in</th>' +
+    '<th class="r">Costs</th><th class="r">Profit</th></tr></thead><tbody>';
+  byVehicle.forEach(function(x){
+    html += "<tr><td><b>" + esc(x.v.make + " " + x.v.model) + '</b><div class="sub">' + esc(x.v.plate) + "</div></td>" +
+      '<td class="r num">' + x.count + '</td><td class="r num">' + x.days + '</td><td class="r num">' + money(x.rev) +
+      '</td><td class="r num">' + money(x.exp) + '</td><td class="r num ' + (x.net >= 0 ? "good" : "bad") +
+      '"><b>' + money(x.net) + "</b></td></tr>";
+  });
+  html += "</tbody></table></div></div>";
+
+  var owing = state.rentals.filter(function(r){ return !r.cancelled && rentalBalance(r) > 0; })
+    .sort(function(a,b){ return rentalBalance(b) - rentalBalance(a); });
+  var owedTotal = owing.reduce(function(s,r){ return s + rentalBalance(r); }, 0);
+
+  html += '<div class="panel"><div class="panelhead"><h2>Outstanding balances</h2><b class="num">' + money(owedTotal) + "</b></div>";
+  if(!owing.length){
+    html += '<p class="empty">Nobody owes you anything. Good place to be.</p></div>';
+    return html;
+  }
+  html += '<div class="scroll"><table class="tbl"><thead><tr><th>Customer</th><th>Vehicle</th><th>Rental dates</th>' +
+    '<th>Status</th><th class="r">Owing</th></tr></thead><tbody>';
+  owing.forEach(function(r){
+    html += "<tr><td><b>" + esc(customerName(r.customerId)) + "</b></td><td>" + esc(vehicleName(r.vehicleId)) + "</td>" +
+      "<td>" + shortDate(r.pickup) + " to " + shortDate(r.returnDate) + "</td>" +
+      "<td>" + chip(rentalState(r, t)) + '</td><td class="r num"><b>' + money(rentalBalance(r)) + "</b></td></tr>";
+  });
+  return html + "</tbody></table></div></div>";
+};
+
+/* ---- settings ---- */
+VIEWS.settings = function(){
+  var html = '<div class="topbar"><div><h1>Settings</h1><p>Your account, your data, your backups.</p></div></div>';
+  html += '<div class="panel first"><h2>Account</h2><table class="tbl"><tbody>' +
+    '<tr><td>Signed in as</td><td class="r">' + esc(ui.email || "unknown") + "</td></tr>" +
+    '<tr><td>Database</td><td class="r num">' + esc(SUPABASE_URL.replace("https://","")) + "</td></tr>" +
+    "</tbody></table>" +
+    '<div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">' +
+    '<button class="btn" onclick="app.refresh()">Reload from database</button>' +
+    '<button class="btn" onclick="app.signOut()">Sign out</button></div>' +
+    '<p class="sub" style="margin-top:10px">Staff accounts are added in the Supabase dashboard under ' +
+    "Authentication, Users. Anyone without an account sees nothing at all.</p></div>";
+
+  html += '<div class="panel"><h2>House rules in use</h2><table class="tbl"><tbody>' +
+    '<tr><td>Rental days billed</td><td class="r">Pickup to return, minimum 1 day</td></tr>' +
+    '<tr><td>Late fee past the return time</td><td class="r num">' + money(LATE_FEE_PER_HOUR) + " per hour</td></tr>" +
+    '<tr><td>Currency</td><td class="r">Jamaican dollars</td></tr></tbody></table>' +
+    '<p class="sub" style="margin-top:10px">Late fees show as an estimate on overdue rentals. Nothing is charged ' +
+    "until you press Add late fee, so you stay in control of what a customer is actually billed.</p></div>";
+
+  html += '<div class="panel"><h2>Your records</h2><p class="sub">' +
+    state.vehicles.length + " vehicles, " + state.customers.length + " customers, " + state.rentals.length +
+    " rentals, " + state.payments.length + " payments and " + state.expenses.length + " expenses are in the database.</p>" +
+    '<div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">' +
+    '<button class="btn" onclick="app.backup()">Download backup</button>' +
+    '<button class="btn" onclick="app.exportRentals()">Export rentals as CSV</button>' +
+    '<label class="btn" style="cursor:pointer">Import a backup file' +
+    '<input type="file" accept="application/json" style="display:none" onchange="app.restore(this)"></label></div>' +
+    (ui.message ? '<div class="note">' + esc(ui.message) + "</div>" : "") +
+    '<p class="sub" style="margin-top:12px">Importing adds and updates records, it never deletes. ' +
+    "Use it once to bring across the file you were working in offline.</p></div>";
+
+  html += '<div class="panel"><h2>Keeping customer details safe</h2><p class="sub" style="max-width:640px">' +
+    "Store the licence number only. Do not upload photos or scans of licences, passports or bank cards. " +
+    "Every record here is locked to signed in accounts, so a stranger with the web address still sees nothing. " +
+    "Download a backup now and then anyway, since the free Supabase plan does not include automatic backups.</p></div>";
+  return html;
+};
+
+/* --------------------------- modals ------------------------- */
+
+function openModal(title, body, footer){
+  document.getElementById("modalHost").innerHTML =
+    '<div class="ov" onclick="app.backdrop(event)"><div class="modal" role="dialog" aria-modal="true">' +
+    '<div class="modalhead"><h3>' + esc(title) + '</h3>' +
+    '<button class="iconbtn" onclick="app.closeModal()" aria-label="Close">&times;</button></div>' +
+    body + '<div class="modalfoot">' + footer + "</div></div></div>";
+}
+function closeModal(){ document.getElementById("modalHost").innerHTML = ""; }
+document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeModal(); });
+
+function field(label, inner){
+  return '<div class="field"><label class="lbl">' + esc(label) + "</label>" + inner + "</div>";
+}
+/* Returns a customer to create alongside the rental, null if an existing one was
+   picked, or false if "Add a new customer" was chosen but no name was typed. */
+function newCustomerFromForm(){
+  if(val("fCustomer") !== "__new__") return null;
+  var name = val("ncName").trim();
+  if(!name) return false;
+  return {id:uid("c"), name:name, phone:val("ncPhone"), email:"", address:"",
+          licence:val("ncLicence"), notes:""};
+}
+function methodOptions(sel){
+  return opts(["Cash","Bank transfer","Card","Cheque","Other"].map(function(m){ return [m,m]; }), sel);
+}
+
+/* rental form */
+function rentalForm(existing){
+  var t = todayISO();
+  var r = existing || {customerId: (state.customers[0]||{}).id || "", vehicleId:"", pickup:t,
+                       returnDate:addDays(t,2), rate:"", fees:0, notes:""};
+  var body = '<div id="clashBox"></div><div class="grid2">' +
+    field("Customer", '<select class="in" id="fCustomer" onchange="app.customerPicked()">' +
+      '<option value="">Choose a customer</option>' +
+      '<option value="__new__">Add a new customer</option>' +
+      opts(state.customers.map(function(c){ return [c.id, c.name]; }), r.customerId) + "</select>") +
+    field("Vehicle", '<select class="in" id="fVehicle" onchange="app.vehiclePicked()">' +
+      '<option value="">Choose a vehicle</option>' +
+      opts(state.vehicles.map(function(v){ return [v.id, vehicleFull(v.id)]; }), r.vehicleId) +
+      "</select>") + "</div>";
+  body += '<div id="newCustomerBox" style="display:none">' +
+    '<div class="calc" style="margin-bottom:14px"><div style="display:block">' +
+    '<div class="grid2">' +
+    field("New customer name", '<input class="in" id="ncName" placeholder="Full name" oninput="app.calcRental()">') +
+    field("Phone", '<input class="in" id="ncPhone" placeholder="876 000 0000">') + "</div>" +
+    field("Driver licence reference", '<input class="in" id="ncLicence" placeholder="Number only, no scans">') +
+    '<div class="sub">This person is saved to Customers when you create the rental.</div>' +
+    "</div></div></div>";
+  body += '<div class="grid2">' +
+    field("Pickup date", '<input class="in" type="date" id="fPickup" value="' + r.pickup + '" onchange="app.calcRental()">') +
+    field("Return date", '<input class="in" type="date" id="fReturn" value="' + r.returnDate + '" onchange="app.calcRental()">') +
+    "</div>";
+  body += '<div class="grid2">' +
+    field("Daily rate", '<input class="in num" type="number" min="0" id="fRate" value="' + r.rate + '" oninput="app.calcRental()">') +
+    field("Extra fees", '<input class="in num" type="number" min="0" id="fFees" value="' + (r.fees||0) + '" oninput="app.calcRental()">') +
+    "</div>";
+  body += '<div class="calc" id="calcBox"></div>';
+  if(!existing){
+    body += '<div class="grid2">' +
+      field("Deposit taken now", '<input class="in num" type="number" min="0" id="fDeposit" value="0">') +
+      field("Paid by", '<select class="in" id="fMethod">' + methodOptions("Cash") + "</select>") + "</div>";
+  }
+  body += field("Agreement number", '<input class="in" id="fAgreement" value="' + esc(r.agreementNo || "") +
+    '" placeholder="Number on the paper agreement">');
+  body += field("Notes", '<textarea class="in" rows="2" id="fNotes" placeholder="Authorised driver, fuel level, condition notes">' +
+    esc(r.notes) + "</textarea>");
+
+  openModal(existing ? "Edit rental" : "New rental", body,
+    '<button class="btn" onclick="app.closeModal()">Cancel</button>' +
+    '<button class="btn primary" id="saveRental" onclick="app.saveRental(' +
+    (existing ? "'" + existing.id + "'" : "null") + ')">' + (existing ? "Save changes" : "Create rental") + "</button>");
+  calcRental();
+}
+function calcRental(){
+  var draft = {pickup:val("fPickup"), returnDate:val("fReturn"), rate:num("fRate"), fees:num("fFees")};
+  var box = document.getElementById("calcBox");
+  if(!box) return;
+  var bad = dayDiff(draft.pickup, draft.returnDate) < 0;
+  var days = bad ? 0 : rentalDays(draft);
+  var total = bad ? 0 : rentalTotal(draft);
+  box.innerHTML =
+    "<div><span>Rental days</span><b class=\"num\">" + days + "</b></div>" +
+    "<div><span>" + days + (days === 1 ? " day at " : " days at ") + money(draft.rate) + "</span><span class=\"num\">" + money(days*draft.rate) + "</span></div>" +
+    "<div><span>Extra fees</span><span class=\"num\">" + money(draft.fees) + "</span></div>" +
+    "<div class=\"tot\"><span>Rental total</span><span class=\"num\">" + money(total) + "</span></div>";
+
+  var warnBox = document.getElementById("clashBox");
+  var msgs = "";
+  if(bad) msgs += '<div class="warn">The return date is before the pickup date.</div>';
+  var vid = val("fVehicle");
+  if(vid && !bad){
+    var clash = state.rentals.some(function(r){
+      return r.vehicleId === vid && !r.cancelled && !r.returnedOn && r.id !== currentRentalId &&
+        overlaps(r, {pickup:draft.pickup, returnDate:draft.returnDate});
+    });
+    if(clash) msgs += '<div class="warn">That vehicle is already booked over these dates. You can still save if you know it is fine.</div>';
+  }
+  if(warnBox) warnBox.innerHTML = msgs;
+  var btn = document.getElementById("saveRental");
+  var who = val("fCustomer");
+  var haveCustomer = who === "__new__" ? !!val("ncName").trim() : !!who;
+  if(btn) btn.disabled = bad || !haveCustomer || !vid || !(num("fRate") > 0);
+}
+var currentRentalId = null;
+
+/* customer form */
+function customerForm(existing){
+  var c = existing || {name:"",phone:"",email:"",address:"",licence:"",notes:""};
+  var body = '<div class="grid2">' +
+    field("Full name", '<input class="in" id="cName" value="' + esc(c.name) + '">') +
+    field("Phone", '<input class="in" id="cPhone" value="' + esc(c.phone) + '" placeholder="876 000 0000">') + "</div>" +
+    '<div class="grid2">' +
+    field("Email", '<input class="in" type="email" id="cEmail" value="' + esc(c.email) + '">') +
+    field("Driver licence reference", '<input class="in" id="cLicence" value="' + esc(c.licence) + '" placeholder="Number only, no scans">') +
+    "</div>" +
+    field("Address", '<input class="in" id="cAddress" value="' + esc(c.address) + '">') +
+    field("Notes", '<textarea class="in" rows="2" id="cNotes">' + esc(c.notes) + "</textarea>");
+  openModal(existing ? "Edit customer" : "Add customer", body,
+    '<button class="btn" onclick="app.closeModal()">Cancel</button>' +
+    '<button class="btn primary" onclick="app.saveCustomer(' + (existing ? "'" + existing.id + "'" : "null") + ')">Save customer</button>');
+}
+
+/* vehicle form */
+function vehicleForm(existing){
+  var v = existing || {make:"",model:"",year:new Date().getFullYear(),plate:"",rate:"",color:"",mileage:"",notes:""};
+  var body = '<div class="grid2">' +
+    field("Make", '<input class="in" id="vMake" value="' + esc(v.make) + '" placeholder="Toyota">') +
+    field("Model", '<input class="in" id="vModel" value="' + esc(v.model) + '" placeholder="Axio">') + "</div>" +
+    '<div class="grid3">' +
+    field("Year", '<input class="in num" type="number" id="vYear" value="' + esc(v.year) + '">') +
+    field("Plate", '<input class="in" id="vPlate" value="' + esc(v.plate) + '" placeholder="1234 JB">') +
+    field("Rate per day", '<input class="in num" type="number" min="0" id="vRate" value="' + esc(v.rate) + '">') + "</div>" +
+    '<div class="grid2">' +
+    field("Color", '<input class="in" id="vColor" value="' + esc(v.color || "") + '" placeholder="Silver">') +
+    field("Mileage in km", '<input class="in num" type="number" min="0" id="vMileage" value="' + esc(v.mileage) + '">') +
+    "</div>" +
+    field("Notes", '<input class="in" id="vNotes" value="' + esc(v.notes) + '" placeholder="Seats, colour, anything to remember">');
+  openModal(existing ? "Edit vehicle" : "Add vehicle", body,
+    '<button class="btn" onclick="app.closeModal()">Cancel</button>' +
+    '<button class="btn primary" onclick="app.saveVehicle(' + (existing ? "'" + existing.id + "'" : "null") + ')">Save vehicle</button>');
+}
+
+/* payment form */
+function paymentForm(rentalId){
+  var open = state.rentals.filter(function(r){ return !r.cancelled; })
+    .sort(function(a,b){ return b.pickup.localeCompare(a.pickup); });
+  if(!open.length){
+    openModal("Record a payment", '<p class="empty">Create a rental first, then you can record money against it.</p>',
+      '<button class="btn" onclick="app.closeModal()">Close</button>');
+    return;
+  }
+  var chosen = rentalId || open[0].id;
+  var body = field("Rental", '<select class="in" id="pRental" onchange="app.paymentRentalChanged()">' +
+    opts(open.map(function(r){
+      return [r.id, customerName(r.customerId) + " on " + vehicleName(r.vehicleId) + ", " + shortDate(r.pickup)];
+    }), chosen) + "</select>");
+  body += '<div class="calc" id="pCalc"></div>';
+  body += '<div class="grid2">' +
+    field("Amount", '<input class="in num" type="number" min="0" id="pAmount" value="0">') +
+    field("Date", '<input class="in" type="date" id="pDate" value="' + todayISO() + '">') + "</div>";
+  body += '<div class="grid2">' +
+    field("Paid by", '<select class="in" id="pMethod">' + methodOptions("Cash") + "</select>") +
+    field("Receipt number", '<input class="in" id="pReceipt" placeholder="Number on the paper receipt">') + "</div>";
+  body += field("Note", '<input class="in" id="pNote" placeholder="Optional">');
+  openModal("Record a payment", body,
+    '<button class="btn" onclick="app.closeModal()">Cancel</button>' +
+    '<button class="btn primary" onclick="app.savePayment()">Save payment</button>');
+  paymentRentalChanged();
+}
+function paymentRentalChanged(){
+  var r = findRental(val("pRental"));
+  if(!r) return;
+  var due = Math.max(0, rentalBalance(r));
+  var box = document.getElementById("pCalc");
+  if(box){
+    box.innerHTML = "<div><span>Rental total</span><span class=\"num\">" + money(rentalTotal(r)) + "</span></div>" +
+      "<div><span>Paid so far</span><span class=\"num\">" + money(rentalPaid(r)) + "</span></div>" +
+      "<div class=\"tot\"><span>Still owing</span><span class=\"num\">" + money(due) + "</span></div>";
+  }
+  var amt = document.getElementById("pAmount");
+  if(amt) amt.value = due;
+}
+
+/* expense form */
+function expenseForm(existing, fixedCategory){
+  var e = existing || {vehicleId:"", date:todayISO(), category:fixedCategory || "Maintenance", amount:"", note:""};
+  var body = '<div class="grid2">' +
+    field("Category", '<select class="in" id="eCategory">' +
+      opts(EXPENSE_CATEGORIES.map(function(c){ return [c,c]; }), e.category) + "</select>") +
+    field("Vehicle", '<select class="in" id="eVehicle">' +
+      '<option value="">Whole business</option>' +
+      opts(state.vehicles.map(function(v){ return [v.id, v.make + " " + v.model + " (" + v.plate + ")"]; }), e.vehicleId) +
+      "</select>") + "</div>";
+  body += '<div class="grid2">' +
+    field("Amount", '<input class="in num" type="number" min="0" id="eAmount" value="' + esc(e.amount) + '">') +
+    field("Date", '<input class="in" type="date" id="eDate" value="' + e.date + '">') + "</div>";
+  body += field("What was it for", '<input class="in" id="eNote" value="' + esc(e.note) +
+    '" placeholder="Brake pads, quarterly premium, wash">');
+  openModal(existing ? "Edit expense" : "Add expense", body,
+    '<button class="btn" onclick="app.closeModal()">Cancel</button>' +
+    '<button class="btn primary" onclick="app.saveExpense(' + (existing ? "'" + existing.id + "'" : "null") + ')">Save expense</button>');
+}
+
+/* --------------------------- downloads ---------------------- */
+
+function downloadFile(name, text, type){
+  var blob = new Blob([text], {type:type});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* --------------------------- actions ------------------------ */
+
+var app = {
+  go: function(view){ ui.view = view; ui.message = ""; render(); },
+
+  /* signing in and out */
+  signIn: function(){
+    var email = val("authEmail").trim(), pw = val("authPassword");
+    if(!email || !pw){ gateMsg("Enter your email and password."); return Promise.resolve(); }
+    var btn = document.getElementById("authBtn");
+    if(btn) btn.disabled = true;
+    gateMsg("Signing in", true);
+    var c;
+    try{ c = client(); }
+    catch(err){ gateMsg(err.message); if(btn) btn.disabled = false; return Promise.resolve(); }
+    return c.auth.signInWithPassword({email:email, password:pw}).then(function(res){
+      if(btn) btn.disabled = false;
+      if(res.error){ gateMsg(res.error.message); return; }
+      var pwBox = document.getElementById("authPassword");
+      if(pwBox) pwBox.value = "";
+      return startApp(res.data && res.data.user ? res.data.user.email : email);
+    }).catch(function(err){
+      if(btn) btn.disabled = false;
+      gateMsg(err.message);
+    });
+  },
+  signOut: function(){
+    return client().auth.signOut().catch(function(){}).then(function(){
+      state = {vehicles:[], customers:[], rentals:[], payments:[], expenses:[]};
+      ui.view = "dashboard";
+      showGate();
+    });
+  },
+  refresh: function(){
+    flag("Loading");
+    return dbLoad().then(function(){ render(); flag("Up to date"); toast("Records reloaded."); })
+      .catch(function(err){ flag("Not loaded"); toast("Could not reload: " + err.message, true); });
+  },
+
+  /* rentals */
+  newRental: function(){ currentRentalId = null; rentalForm(null); },
+  editRental: function(id){ currentRentalId = id; rentalForm(findRental(id)); },
+  vehiclePicked: function(){
+    var v = findVehicle(val("fVehicle"));
+    if(v && !currentRentalId){
+      var rate = document.getElementById("fRate");
+      if(rate) rate.value = v.rate;
+    }
+    calcRental();
+  },
+  calcRental: calcRental,
+  saveRental: function(id){
+    var draft = {
+      customerId: val("fCustomer"), vehicleId: val("fVehicle"),
+      pickup: val("fPickup"), returnDate: val("fReturn"),
+      rate: num("fRate"), fees: num("fFees"),
+      agreementNo: val("fAgreement"), notes: val("fNotes")
+    };
+    if(!draft.vehicleId || !(draft.rate > 0)) return;
+    if(dayDiff(draft.pickup, draft.returnDate) < 0) return;
+    var fresh = newCustomerFromForm();
+    if(fresh === false) return;
+    if(fresh){ state.customers.unshift(fresh); draft.customerId = fresh.id; }
+    if(!draft.customerId) return;
+    if(id){
+      var r = findRental(id);
+      Object.keys(draft).forEach(function(k){ r[k] = draft[k]; });
+      currentRentalId = null;
+      closeModal(); render();
+      return push(dbSave("rentals", r));
+    }
+    draft.id = uid("r"); draft.returnedOn = null; draft.cancelled = false;
+    state.rentals.unshift(draft);
+    var deposit = num("fDeposit"), pay = null;
+    if(deposit > 0){
+      pay = {id:uid("p"), rentalId:draft.id, date:draft.pickup, amount:deposit,
+             method:val("fMethod"), receiptNo:"", note:"Deposit at pickup"};
+      state.payments.unshift(pay);
+    }
+    currentRentalId = null;
+    closeModal(); render();
+    return push(Promise.resolve(fresh ? dbSave("customers", fresh) : null).then(function(){
+      return dbSave("rentals", draft);
+    }).then(function(){
+      return pay ? dbSave("payments", pay) : null;
+    }));
+  },
+  markReturned: function(id){
+    var r = findRental(id);
+    r.returnedOn = todayISO();
+    render();
+    return push(dbSave("rentals", r));
+  },
+  addLateFee: function(id){
+    var r = findRental(id);
+    var fee = lateFeeEstimate(r, todayISO());
+    if(!fee) return;
+    if(!window.confirm("Add " + money(fee) + " in late fees to this rental?")) return;
+    r.fees = (Number(r.fees)||0) + fee;
+    render();
+    return push(dbSave("rentals", r));
+  },
+  cancelRental: function(id){
+    if(!window.confirm("Cancel this booking?")) return;
+    var r = findRental(id);
+    r.cancelled = true;
+    render();
+    return push(dbSave("rentals", r));
+  },
+  deleteRental: function(id){
+    if(!window.confirm("Delete this rental and its payments? This cannot be undone.")) return;
+    state.payments = state.payments.filter(function(p){ return p.rentalId !== id; });
+    state.rentals = state.rentals.filter(function(r){ return r.id !== id; });
+    render();
+    return push(dbRemove("rentals", id));
+  },
+  setRentalQuery: function(v){
+    ui.rentalQuery = v;
+    render();
+    var box = document.getElementById("rentalSearch");
+    if(box){ box.focus(); box.setSelectionRange(box.value.length, box.value.length); }
+  },
+  setRentalFilter: function(v){ ui.rentalFilter = v; render(); },
+
+  /* customers */
+  newCustomer: function(){ customerForm(null); },
+  editCustomer: function(id){ customerForm(findCustomer(id)); },
+  saveCustomer: function(id){
+    var draft = {name:val("cName").trim(), phone:val("cPhone"), email:val("cEmail"),
+                 address:val("cAddress"), licence:val("cLicence"), notes:val("cNotes")};
+    if(!draft.name) return;
+    var target;
+    if(id){
+      target = findCustomer(id);
+      Object.keys(draft).forEach(function(k){ target[k] = draft[k]; });
+    } else {
+      draft.id = uid("c");
+      state.customers.unshift(draft);
+      target = draft;
+    }
+    closeModal(); render();
+    return push(dbSave("customers", target));
+  },
+  deleteCustomer: function(id){
+    var c = findCustomer(id);
+    if(!window.confirm("Delete " + c.name + "? Their rentals stay in the records.")) return;
+    state.customers = state.customers.filter(function(x){ return x.id !== id; });
+    state.rentals.forEach(function(r){ if(r.customerId === id) r.customerId = ""; });
+    render();
+    return push(dbRemove("customers", id));
+  },
+  toggleCustomer: function(id){ ui.openCustomer = ui.openCustomer === id ? null : id; render(); },
+  setCustomerQuery: function(v){ ui.customerQuery = v; render(); },
+
+  /* vehicles */
+  newVehicle: function(){ vehicleForm(null); },
+  editVehicle: function(id){ vehicleForm(findVehicle(id)); },
+  saveVehicle: function(id){
+    var draft = {make:val("vMake").trim(), model:val("vModel").trim(), year:num("vYear"),
+                 plate:val("vPlate").trim(), rate:num("vRate"), color:val("vColor").trim(),
+                 mileage:num("vMileage"), notes:val("vNotes")};
+    if(!draft.make || !draft.plate) return;
+    var target;
+    if(id){
+      target = findVehicle(id);
+      Object.keys(draft).forEach(function(k){ target[k] = draft[k]; });
+    } else {
+      draft.id = uid("v"); draft.inMaintenance = false;
+      state.vehicles.push(draft);
+      target = draft;
+    }
+    closeModal(); render();
+    return push(dbSave("vehicles", target));
+  },
+  toggleService: function(id){
+    var v = findVehicle(id);
+    v.inMaintenance = !v.inMaintenance;
+    render();
+    return push(dbSave("vehicles", v));
+  },
+  deleteVehicle: function(id){
+    var v = findVehicle(id);
+    if(!window.confirm("Remove " + v.make + " " + v.model + " from the fleet?")) return;
+    state.vehicles = state.vehicles.filter(function(x){ return x.id !== id; });
+    state.rentals.forEach(function(r){ if(r.vehicleId === id) r.vehicleId = ""; });
+    render();
+    return push(dbRemove("vehicles", id));
+  },
+
+  /* payments */
+  takePayment: function(rentalId){ paymentForm(rentalId); },
+  paymentRentalChanged: paymentRentalChanged,
+  savePayment: function(){
+    var rentalId = val("pRental"), amount = num("pAmount");
+    if(!rentalId || !(amount > 0)) return;
+    var pay = {id:uid("p"), rentalId:rentalId, date:val("pDate"), amount:amount,
+               method:val("pMethod"), receiptNo:val("pReceipt"), note:val("pNote")};
+    state.payments.unshift(pay);
+    closeModal(); render();
+    return push(dbSave("payments", pay));
+  },
+  deletePayment: function(id){
+    if(!window.confirm("Delete this payment?")) return;
+    state.payments = state.payments.filter(function(p){ return p.id !== id; });
+    render();
+    return push(dbRemove("payments", id));
+  },
+
+  /* expenses */
+  newExpense: function(category){ expenseForm(null, category); },
+  editExpense: function(id){
+    expenseForm(state.expenses.filter(function(e){ return e.id === id; })[0]);
+  },
+  saveExpense: function(id){
+    var draft = {vehicleId:val("eVehicle"), date:val("eDate"), category:val("eCategory"),
+                 amount:num("eAmount"), note:val("eNote")};
+    if(!(draft.amount > 0)) return;
+    var target;
+    if(id){
+      target = state.expenses.filter(function(x){ return x.id === id; })[0];
+      Object.keys(draft).forEach(function(k){ target[k] = draft[k]; });
+    } else {
+      draft.id = uid("e");
+      state.expenses.unshift(draft);
+      target = draft;
+    }
+    closeModal(); render();
+    return push(dbSave("expenses", target));
+  },
+  deleteExpense: function(id){
+    if(!window.confirm("Delete this expense?")) return;
+    state.expenses = state.expenses.filter(function(e){ return e.id !== id; });
+    render();
+    return push(dbRemove("expenses", id));
+  },
+  setExpenseCategory: function(v){ ui.expenseCategory = v; render(); },
+
+  /* calendar and reports */
+  calStep: function(n){
+    var d = new Date(ui.calCursor.y, ui.calCursor.m + n, 1);
+    ui.calCursor = {y:d.getFullYear(), m:d.getMonth()};
+    render();
+  },
+  calToday: function(){
+    var now = new Date();
+    ui.calCursor = {y:now.getFullYear(), m:now.getMonth()};
+    render();
+  },
+  setCalVehicle: function(v){ ui.calVehicle = v; render(); },
+  openRentals: function(filter){ ui.rentalFilter = filter; ui.rentalQuery = ""; ui.view = "rentals"; render(); },
+  customerPicked: function(){
+    var box = document.getElementById("newCustomerBox");
+    if(box) box.style.display = val("fCustomer") === "__new__" ? "block" : "none";
+    var name = document.getElementById("ncName");
+    if(name && val("fCustomer") === "__new__") name.focus();
+    calcRental();
+  },
+  setReportRange: function(v){ ui.reportRange = Number(v); render(); },
+
+  /* backups and importing */
+  backup: function(){
+    downloadFile("charlton-backup-" + todayISO() + ".json", JSON.stringify(state, null, 2), "application/json");
+    ui.message = "Backup downloaded."; render();
+  },
+  exportRentals: function(){
+    var t = todayISO();
+    var cell = function(s){ return '"' + String(s).replace(/"/g, '""') + '"'; };
+    var lines = ["Agreement,Customer,Vehicle,Plate,Pickup,Return,Days,Rate,Fees,Total,Paid,Balance,Status"];
+    state.rentals.forEach(function(r){
+      var v = findVehicle(r.vehicleId);
+      var paid = rentalPaid(r);
+      lines.push([cell(r.agreementNo || ""), cell(customerName(r.customerId)),
+        cell(v ? v.make + " " + v.model : ""), cell(v ? v.plate : ""),
+        r.pickup, r.returnDate, rentalDays(r), r.rate, r.fees || 0, rentalTotal(r), paid,
+        rentalTotal(r) - paid, rentalState(r, t)].join(","));
+    });
+    downloadFile("charlton-rentals-" + t + ".csv", lines.join("\n"), "text/csv");
+    ui.message = "Rentals exported as CSV."; render();
+  },
+  restore: function(input){
+    var file = input.files && input.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var parsed;
+      try{
+        parsed = JSON.parse(String(reader.result));
+        if(!parsed || !Array.isArray(parsed.vehicles)) throw new Error("not a backup file");
+      }catch(err){
+        ui.message = "That file could not be read. Choose a backup file created by this app.";
+        render();
+        return;
+      }
+      app.importBackup(parsed);
+    };
+    reader.readAsText(file);
+    input.value = "";
+  },
+  /* Order matters: cars and customers first, then the rentals that point at them. */
+  importBackup: function(data){
+    var counts = TABLES.map(function(t){ return (data[t] || []).length; });
+    ui.message = "Uploading " + counts.reduce(function(a,b){ return a+b; }, 0) + " records";
+    render();
+    flag("Uploading");
+    var chain = Promise.resolve();
+    TABLES.forEach(function(name){
+      chain = chain.then(function(){ return dbSaveMany(name, data[name] || []); });
+    });
+    return chain.then(function(){
+      return dbLoad();
+    }).then(function(){
+      ui.message = "Import finished. Your records are now in the database.";
+      flag("Up to date");
+      render();
+      toast("Import finished.");
+    }).catch(function(err){
+      ui.message = "Import stopped: " + err.message;
+      flag("Not saved");
+      render();
+      toast("Import stopped: " + err.message, true);
+    });
+  },
+
+  /* modal plumbing */
+  closeModal: closeModal,
+  backdrop: function(e){ if(e.target === e.currentTarget) closeModal(); }
+};
+window.app = app;
+
+/* --------------------------- start -------------------------- */
+boot();
+</script>
+</body>
+</html>
